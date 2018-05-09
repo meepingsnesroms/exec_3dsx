@@ -8,9 +8,10 @@ extern const loaderFuncs_s loader_Ninjhax1;
 extern const loaderFuncs_s loader_Ninjhax2;
 extern const loaderFuncs_s loader_Rosalina;
 
+static argData_s newProgramArgs;;//the argv variable must remain in memory even when the application exits for the new program to load properly
+
 
 int exec_3dsx(const char* path, const char* args){
-	argData_s newProgramArgs;
 	struct stat sBuff; 
 	bool fileExists;
 	bool inited;
