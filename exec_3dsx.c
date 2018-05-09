@@ -3,9 +3,11 @@
 
 #include "mini-hb-menu/common.h"
 
+
 extern const loaderFuncs_s loader_Ninjhax1;
 extern const loaderFuncs_s loader_Ninjhax2;
 extern const loaderFuncs_s loader_Rosalina;
+
 
 int exec_3dsx(const char* path, const char* args){
 	argData_s newProgramArgs;
@@ -27,6 +29,9 @@ int exec_3dsx(const char* path, const char* args){
 		errno = EINVAL;;
 		return -1;
 	}
+	
+	if(args == NULL || args[0] = '\0')
+		args = path;
 	
 	int argsSize = strlen(args);
 	strncpy((char*)newProgramArgs.buf , args, ENTRY_ARGBUFSIZE);
