@@ -30,7 +30,7 @@ int exec_3dsx(const char* path, const char* args){
 		return -1;
 	}
 	
-	if(args == NULL || args[0] = '\0')
+	if(args == NULL || args[0] == '\0')
 		args = path;
 	
 	int argsSize = strlen(args);
