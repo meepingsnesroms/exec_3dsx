@@ -1,3 +1,5 @@
+#include <string.h>
+#include <stdlib.h>
 #include <errno.h>
 #include <sys/stat.h>
 #include <3ds.h>
@@ -13,7 +15,7 @@ typedef struct{
 
 
 static int isCiaInstalled(u64 titleId){
-	u32 titlesToRetrieve
+	u32 titlesToRetrieve;
 	u32 titlesRetrieved;
 	u64* titleIds;
 	Result failed;
@@ -27,11 +29,11 @@ static int isCiaInstalled(u64 titleId){
 		return -1;
 	
 	failed = AM_GetTitleList(&titlesRetrieved, MEDIATYPE_SD, titlesToRetrieve, titleIds);
-	if(R_FAILED(failed) == NULL)
+	if(R_FAILED(failed))
 		return -1;
 	
 	for(u32 titlesToCheck = 0; titlesToCheck < titlesRetrieved; titlesToCheck++){
-		if(titleIds[titlesToCheck] == titleID){
+		if(titleIds[titlesToCheck] == titleId){
 			free(titleIds);
 			return 1;
 		}	
@@ -95,7 +97,7 @@ static u64 getCiaTitleId(Handle ciaFile){
 	if(R_FAILED(failed))
 		return 0x0000000000000000;
 	
-	return ciaInfo.titleId;
+	return ciaInfo.titleID;
 }
 
 static void errorAndQuit(const char* errorStr){
@@ -133,7 +135,7 @@ int exec_cia(const char* path, const char* args){
 		FS_Archive ciaArchive;
 		Handle ciaFile;
 		u64 titleId;
-		int ciaInstalled; = isCiaInstalled(path);
+		int ciaInstalled;
 		ciaParam param;
 		int argsLength;
 		extern char __argv_hmac[0x20];
