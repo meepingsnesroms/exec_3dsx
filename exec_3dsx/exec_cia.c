@@ -144,7 +144,6 @@ int exec_cia(const char* path, const char* args){
 		int ciaInstalled;
 		ciaParam param;
 		int argsLength;
-		extern char __argv_hmac[0x20];
 		
 		//open cia file
 		res = FSUSER_OpenArchive(&ciaArchive, ARCHIVE_SDMC, fsMakePath(PATH_EMPTY, ""));

@@ -16,8 +16,8 @@ int main(int argc, char* argv[]){
 	}
 	printf("(End of argv args)\n");
 	
-	printf("A = launch sdmc:/debug.3dsx\n");
-	printf("B = launch sdmc:/debug.cia\n");
+	printf("A = launch sdmc:/testProgram.3dsx\n");
+	printf("B = launch sdmc:/testProgram.cia\n");
 	
 	// Main loop
 	while (aptMainLoop()) {
@@ -26,11 +26,15 @@ int main(int argc, char* argv[]){
 		hidScanInput();
 		u32 kDown = hidKeysDown();
 		
-		if(kDown & KEY_A)
-			exec_3dsx("sdmc:/debug.3dsx", "arg1 arg2 \"arg3 with spaces\"");
+		if(kDown & KEY_A){
+			//gfxExit();
+			exec_3dsx("sdmc:/testProgram.3dsx", "arg1 arg2 \"arg3 with spaces\"");
+			//break;
+		}
+			
 		
 		if(kDown & KEY_B)
-			exec_cia("sdmc:/debug.cia", "arg1 arg2 \"arg3 with spaces\"");
+			exec_cia("sdmc:/testProgram.cia", "arg1 arg2 \"arg3 with spaces\"");
 		
 		if(kDown & KEY_START)
 			break; // break in order to return to hbmenu

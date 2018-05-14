@@ -10,40 +10,8 @@ extern const loaderFuncs_s loader_Ninjhax1;
 extern const loaderFuncs_s loader_Ninjhax2;
 extern const loaderFuncs_s loader_Rosalina;
 
-/*
-static int parseArgsAsTerminal(const char* argString, argData_s* argsOut){
-	bool inSingleQuotes = false;
-	bool inDoubleQuotes = false;
-	int argStringLength = strlen(argString);
-	int argsLength = 0;
-	unsigned int argPtr;
-	//int totalArgs = 0;
-	char* argArray = (char*)argsOut->buf;
-	
-	memset(argsOut->buf, '\0', sizeof(argsOut->buf));
-	
-	//build argument list like a terminal command on linux
-	for(argPtr = 0; argPtr < argStringLength; argPtr++){
-		if(argString[argPtr] == '\'')
-			inSingleQuotes = !inSingleQuotes;
-		else if(argString[argPtr] == '\"')
-			inDoubleQuotes = !inDoubleQuotes;
-		else{
-			if(!inSingleQuotes && !inDoubleQuotes && argString[argPtr] == ' '){
-				//totalArgs++;
-				argArray[argsLength] = '\0';
-			}
-			else{
-				argArray[argsLength] = argString[argPtr];
-			}
-			
-			argsLength++;
-		}
-	}
-	
-	return argPtr;
-}
-*/
+static void (*launch_3dsx)(const char* path, argData_s* args, executableMetadata_s* em);
+
 
 int exec_3dsx(const char* path, const char* args){
 	struct stat sBuff; 
@@ -67,31 +35,31 @@ int exec_3dsx(const char* path, const char* args){
 	}
 
 	//args
-	memset(newProgramArgs.buf, '\0', ENTRY_ARGBUFSIZE);
-	newProgramArgs.dst = (char*)newProgramArgs.buf;
+	/*
+	//memset(newProgramArgs.buf, '\0', sizeof(newProgramArgs.buf));
+	newProgramArgs.dst = (char*)&newProgramArgs.buf[0];
 	//launchAddArg(&newProgramArgs, path);
-	if(args != NULL || args[0] != '\0'){
+	if(args != NULL && args[0] != '\0'){
 		launchAddArgsFromString(&newProgramArgs, args);
 	}
-	
-	//launch as if its the first program run
-	osSetSpeedupEnable(false);
+	*/
 	
 	inited = loader_Rosalina.init();
-	if(inited){
-		loader_Rosalina.launchFile(path, &newProgramArgs, NULL);
-		exit(0);
+	launch_3dsx = loader_Rosalina.launchFile;
+	
+	if(!inited){
+		inited = loader_Ninjhax2.init();
+		launch_3dsx = loader_Ninjhax2.launchFile;
+	}
+
+	if(!inited){
+		inited = loader_Ninjhax1.init();
+		launch_3dsx = loader_Ninjhax1.launchFile;
 	}
 	
-	inited = loader_Ninjhax2.init();
 	if(inited){
-		loader_Ninjhax2.launchFile(path, &newProgramArgs, NULL);
-		exit(0);
-	}
-	
-	inited = loader_Ninjhax1.init();
-	if(inited){
-		loader_Ninjhax1.launchFile(path, &newProgramArgs, NULL);
+		osSetSpeedupEnable(false);
+		launch_3dsx(path, &newProgramArgs, NULL);
 		exit(0);
 	}
 	
