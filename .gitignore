@@ -1,0 +1,10 @@
+*.o
+*.so
+*.a
+*.d
+*.lst
+*.map
+*.3dsx
+*.smdh
+*.cia
+*.elf
