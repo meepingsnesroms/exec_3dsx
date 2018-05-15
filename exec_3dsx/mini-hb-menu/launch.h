@@ -1,3 +1,5 @@
+#pragma once
+
 #include "common.h"
 
 extern void (*__system_retAddr)(void);

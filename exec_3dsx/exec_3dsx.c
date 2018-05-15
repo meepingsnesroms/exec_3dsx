@@ -13,9 +13,10 @@ extern const loaderFuncs_s loader_Rosalina;
 static void (*launch_3dsx)(const char* path, argData_s* args, executableMetadata_s* em);
 
 
-int exec_3dsx(const char* path, const char* args){
+static int exec_3dsx_actual(const char* path, const char* args, bool appendPath){
 	struct stat sBuff; 
 	argData_s newProgramArgs;
+	char* writeableString[0x400];
 	bool fileExists;
 	bool inited;
 	
@@ -34,15 +35,17 @@ int exec_3dsx(const char* path, const char* args){
 		return -1;
 	}
 
-	//args
-	/*
-	//memset(newProgramArgs.buf, '\0', sizeof(newProgramArgs.buf));
-	newProgramArgs.dst = (char*)&newProgramArgs.buf[0];
-	//launchAddArg(&newProgramArgs, path);
-	if(args != NULL && args[0] != '\0'){
-		launchAddArgsFromString(&newProgramArgs, args);
+	//args the string functions write to the passed string, this will cause a write to read only memory sot the string must be cloned
+	memset(newProgramArgs.buf, '\0', sizeof(newProgramArgs.buf));
+	newProgramArgs.dst = (char*)&newProgramArgs.buf[1];
+	if(appendPath){
+		strcpy(writeableString, path);
+		launchAddArg(&newProgramArgs, writeableString);
 	}
-	*/
+	if(args != NULL && args[0] != '\0'){
+		strcpy(writeableString, args);
+		launchAddArgsFromString(&newProgramArgs, writeableString);
+	}
 	
 	inited = loader_Rosalina.init();
 	launch_3dsx = loader_Rosalina.launchFile;
@@ -66,4 +69,12 @@ int exec_3dsx(const char* path, const char* args){
 	//should never be reached
 	errno = ENOTSUP;
 	return -1;
+}
+
+int exec_3dsx(const char* path, const char* args){
+	return exec_3dsx_actual(path, args, true/*appendPath*/);
+}
+
+int exec_3dsx_no_path_in_args(const char* path, const char* args){
+	return exec_3dsx_actual(path, args, false/*appendPath*/);
 }
