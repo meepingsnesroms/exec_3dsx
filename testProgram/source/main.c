@@ -6,6 +6,7 @@
 #include "../../exec_3dsx/exec_cia.h"
 
 int main(int argc, char* argv[]){
+	char* argsList[4] = {"arg1", "arg2", "arg3 with spaces", NULL};
 	gfxInitDefault();
 	consoleInit(GFX_TOP, NULL);
 	
@@ -28,13 +29,13 @@ int main(int argc, char* argv[]){
 		
 		if(kDown & KEY_A){
 			//gfxExit();
-			exec_3dsx("sdmc:/testProgram.3dsx", "arg1 arg2 \"arg3 with spaces\"");
+			exec_3dsx("sdmc:/testProgram.3dsx", argsList);
 			//break;
 		}
 			
 		
 		if(kDown & KEY_B)
-			exec_cia("sdmc:/testProgram.cia", "arg1 arg2 \"arg3 with spaces\"");
+			exec_cia("sdmc:/testProgram.cia", argsList);
 		
 		if(kDown & KEY_START)
 			break; // break in order to return to hbmenu
