@@ -115,7 +115,7 @@ static int installCia(Handle ciaFile){
 	return 1;
 }
 
-int exec_cia(const char* path, const char* args){
+int exec_cia(const char* path, const char** args){
 	struct stat sBuff; 
 	bool fileExists;
 	bool inited;
