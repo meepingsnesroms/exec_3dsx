@@ -4,6 +4,8 @@
 *.d
 *.lst
 *.map
+*.icn
+*.bnr
 *.3dsx
 *.smdh
 *.cia
